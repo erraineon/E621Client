@@ -14,3 +14,5 @@ var postUrls = posts
 ```
 
 implements a rate limiter to throttle requests at one per second
+
+[nuget package](https://www.nuget.org/packages/E621Client)
