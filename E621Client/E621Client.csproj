@@ -4,6 +4,15 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>E621Client</AssemblyName>
     <RootNamespace>E621</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.0.1</Version>
+    <Authors>errai</Authors>
+    <Product />
+    <Company />
+    <Description>.net standard e621 api wrapper</Description>
+    <PackageProjectUrl />
+    <RepositoryUrl>https://github.com/erraineon/E621Client</RepositoryUrl>
+    <PackageTags>e621 api client</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
