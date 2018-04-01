@@ -1,0 +1,53 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.WebUtilities;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+
+namespace E621
+{
+    public class E621Client
+    {
+        private static readonly JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings
+        {
+            ContractResolver = new DefaultContractResolver {NamingStrategy = new SnakeCaseNamingStrategy()},
+            DefaultValueHandling = DefaultValueHandling.Ignore,
+            Converters = {new RubyDateTimeConverter()}
+        };
+
+        //limit requests to one per second, as per API guideline
+        private static readonly RateLimiter RequestLimiter = new RateLimiter(1, TimeSpan.FromSeconds(1));
+
+        private readonly HttpClient _httpClient = new HttpClient();
+
+        public E621Client(string userAgent)
+        {
+            _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent);
+        }
+
+        public async Task<IList<E621Post>> Search(E621SearchOptions options)
+        {
+            const string baseUri = "https://e621.net/post/index.json";
+            var parameters = ToDictionary(options);
+            var requestUri = QueryHelpers.AddQueryString(baseUri, parameters);
+            var response = await Request(requestUri);
+            var posts = JsonConvert.DeserializeObject<List<E621Post>>(response, JsonSerializerSettings);
+            return posts;
+        }
+
+        private async Task<string> Request(string requestUri)
+        {
+            await RequestLimiter.WaitToProceed();
+            var response = await _httpClient.GetStringAsync(requestUri);
+            return response;
+        }
+
+        private static Dictionary<string, string> ToDictionary(object value)
+        {
+            return JsonConvert.DeserializeObject<Dictionary<string, string>>(
+                JsonConvert.SerializeObject(value, JsonSerializerSettings));
+        }
+    }
+}
