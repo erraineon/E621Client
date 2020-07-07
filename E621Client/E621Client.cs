@@ -13,8 +13,7 @@ namespace E621
         private static readonly JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings
         {
             ContractResolver = new DefaultContractResolver {NamingStrategy = new SnakeCaseNamingStrategy()},
-            DefaultValueHandling = DefaultValueHandling.Ignore,
-            Converters = {new RubyDateTimeConverter()}
+            DefaultValueHandling = DefaultValueHandling.Ignore
         };
 
         //limit requests to one per second, as per API guideline
@@ -29,12 +28,16 @@ namespace E621
 
         public async Task<IList<E621Post>> Search(E621SearchOptions options)
         {
-            const string baseUri = "https://e621.net/post/index.json";
+            const string baseUri = "https://e621.net/posts.json";
             var parameters = ToDictionary(options);
+            if (options.BeforeId is { } beforeId)
+                parameters["page"] = $"b{beforeId}";
+            else if (options.AfterId is { } afterId)
+                parameters["page"] = $"a{afterId}";
             var requestUri = QueryHelpers.AddQueryString(baseUri, parameters);
             var response = await Request(requestUri);
-            var posts = JsonConvert.DeserializeObject<List<E621Post>>(response, JsonSerializerSettings);
-            return posts;
+            var root = JsonConvert.DeserializeObject<E621PostsRoot>(response, JsonSerializerSettings);
+            return root.Posts;
         }
 
         private async Task<string> Request(string requestUri)
