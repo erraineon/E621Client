@@ -8,7 +8,7 @@ namespace E621
     {
         public long Id { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
         public E621File File { get; set; }
         public E621Preview Preview { get; set; }
         public E621Preview Sample { get; set; }
