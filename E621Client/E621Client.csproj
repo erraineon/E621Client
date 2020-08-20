@@ -5,7 +5,7 @@
     <AssemblyName>E621Client</AssemblyName>
     <RootNamespace>E621</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.0.2</Version>
+    <Version>0.0.3</Version>
     <Authors>errai</Authors>
     <Product />
     <Company />
@@ -14,6 +14,7 @@
     <RepositoryUrl>https://github.com/erraineon/E621Client</RepositoryUrl>
     <PackageTags>e621 api client</PackageTags>
     <LangVersion>latest</LangVersion>
+    <AssemblyVersion>0.0.3.0</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
